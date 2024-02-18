@@ -82,13 +82,13 @@ export default function Component() {
       setAddressError("Address has not been entered")
     }
     if(!password){
-      setPasswordError("Email has not been entered")
+      setPasswordError("Password has not been entered")
     }
     if(!idNumber){
-      setIdNumberError("Email has not been entered")
+      setIdNumberError("ID Number has not been entered")
     }
     if(!racialGroup){
-      setRacialGroupError("Email has not been entered")
+      setRacialGroupError("Racial group has not been entered")
     }
 
     if(email && name && idNumber && password && racialGroup && address)

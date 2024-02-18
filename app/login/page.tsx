@@ -15,6 +15,7 @@ import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { auth, firestore } from "../../lib/Firebase"
 import { useRouter } from "next/navigation"
+import { Link } from "lucide-react"
 
 export default function Component() {
     const [email, setEmail] = useState("");
@@ -40,19 +41,18 @@ export default function Component() {
           setEmailError("Email has not been entered")
         }
         if(!password){
-          setPasswordError("Email has not been entered")
+          setPasswordError("Password has not been entered")
         }
         if(email && password){
-              router.push("/party")
+              router.push("/party") //if the password and email has been entered then push to the party page
         }
 
         await signInWithEmailAndPassword (auth, email, password).then(userCredentials => {
             const user = userCredentials.user;
       
-            console.log("Registered with:", user, email);
+            console.log("Login with:", user, email);
           })
     }
-
 
 
   return (
@@ -74,48 +74,57 @@ export default function Component() {
           </div>
           <div className="flex gap-4">
             <div>
+                <Link href="/party">
               <Button className="text-sm bg-black text-white" variant="outline">
                 Login
               </Button>
+              </Link>
             </div>
             <div>
+                <Link href="/register">
               <Button className="text-sm bg-black text-white" variant="outline">
                 Register
               </Button>
+              </Link>
             </div>
           </div>
         </div>
+
         <div className="flex items-center justify-center mb-8">
           <h1 className="text-3xl font-bold text-center">Political Parties</h1>
         </div>
         <p className="text-center text-gray-500 dark:text-gray-400 mb-8">
           Choose your party wisely. Your vote matters.
         </p>
+        <div className="flex justify-center">
         <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 lg:gap-8">
-          <div className="flex items-center flex justify-center">
           <div className="container px-4 flex flex-col items-center">
             <Card className="p-8 bg-sky-200 dark:bg-sky-900 mx-auto">
               <CardHeader className="grid gap-1 text-center">
                 <CardTitle className="text-2xl font-bold">Login</CardTitle>
                 <CardContent className="grid gap-4">
                   <div className="grid gap-2">
-                    <Label className="text-base" htmlFor="name">
-                      Name
-                    </Label>
-                    {/* //ADD EMAIL AND PASSWORD AND REMOVE EMAIL NUMBER*/}
-                    <Input id="name" placeholder="John Doe" />
-                  </div>
-                  <div className="grid gap-2">
                     <Label className="text-base" htmlFor="id">
-                      ID Number
+                      Email
                     </Label>
-                    <Input id="id" placeholder="1234567890" />
+                    <Input id="email" 
+                        placeholder="m@example.com" 
+                        type="email" required
+                        value={email}
+                        onChange={handleEmailChange}/>
+                        {emailError && (<p className="text-red-500 text-sm">{emailError}</p>)} 
+                        {/* //ADD EMAIL AND PASSWORD AND REMOVE EMAIL NUMBER*/}
                   </div>
                   <div className="grid gap-2">
                     <Label className="text-base" htmlFor="password">
                       Password
                     </Label>
-                    <Input id="password" type="password" />
+                    <Input 
+                        id="password" 
+                        type="password" 
+                        value={password}
+                        onChange={handlePasswordChange}/>
+                        {passwordError && (<p className="text-red-500 text-sm">{passwordError}</p>)}
                   </div>
                   <Button className="w-full" type="submit">
                     Submit
@@ -124,8 +133,9 @@ export default function Component() {
               </CardHeader>
             </Card>
           </div>
-          </div>
         </div>
+        </div>
+        
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
           Remember, your vote is your voice. Make it count.
         </p>
