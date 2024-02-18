@@ -1,12 +1,48 @@
+"use client";
 
 import { Button } from "@/components/ui/button"
 import { CardTitle, CardHeader, Card } from "@/components/ui/card"
 import Link from 'next/link';
- 
-{/* //CODE FOR RESULTS */}
-export default function Component() {
-  return (
+import database from "@/lib/database";
+import { useEffect, useState } from "react";
+import { Vote } from "@/models/vote";
 
+
+{/* //CODE FOR RESULTS */ }
+export default function Component() {
+
+  const [votes, setVotes] = useState<Vote[]>([]);
+
+
+  useEffect(() => {
+    fetchVotes();
+  }, []
+  );
+
+  const getVotesByParty = () => {
+    const partyIds: { [key: string]: number } = {};
+
+    for (const { party_id } of votes) {
+      partyIds[party_id] = (partyIds[party_id] || 0) + 1;
+    }
+
+    return partyIds;
+  }
+
+
+  const fetchVotes = async () => {
+    const votes = await database.getVotes();
+    setVotes(votes)
+  }
+
+  const getTotalVotes = () => {
+    if (votes) {
+      return votes.length;
+    }
+    0;
+  }
+
+  return (
 
     <div className="bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container px-4">
@@ -14,20 +50,15 @@ export default function Component() {
           <div>
             <img
               alt="Logo"
-              className="mr-2"
+              className="w-16"
               height="40"
-              src="/IEC.png"
-              style={{
-                aspectRatio: "40/40",
-                objectFit: "cover",
-              }}
-              width="40"
+              src="/IEC9.png"
             />
           </div>
           <div className="flex gap-4">
             {/* //Link here */}
             <div>
-             <Link href="/party">
+              <Link href="/login">
                 <Button className="text-sm bg-black text-white" variant="outline">
                   Login
                 </Button>
@@ -78,13 +109,19 @@ export default function Component() {
                 <div
                   className="h-full bg-yellow-500 dark:bg-yellow-500 flex items-center justify-center"
                   style={{
-                    width: "40%",
+                    width: `${Math.round(
+                      getVotesByParty()[0] / votes.length * 100
+                    )}%`,
                   }}
                 >
-                  40%
+                  {Math.round(
+                    getVotesByParty()[0] / votes.length * 100
+                  )
+                  } %
                 </div>
               </div>
-              <p className="text-gray-500 dark:text-gray-400">20 voters</p>
+              <p className="text-gray-500 dark:text-gray-400">{getVotesByParty()[0]} voters
+              </p>
             </CardHeader>
           </Card>
           {/* //Eff Section */}
@@ -103,16 +140,21 @@ export default function Component() {
                 width="150"
               />
               <div className="h-8 w-48 bg-gray-300 dark:bg-gray-700 mx-auto">
-                <div
-                  className="h-full bg-red-500 dark:bg-red-500 flex items-center justify-center"
+              <div
+                  className="h-full bg-yellow-500 dark:bg-yellow-500 flex items-center justify-center"
                   style={{
-                    width: "64%",
+                    width: `${Math.round(
+                      getVotesByParty()[1] / votes.length * 100
+                    )}%`,
                   }}
                 >
-                  64%
+                  {Math.round(
+                    getVotesByParty()[1] / votes.length * 100
+                  )
+                  } %
                 </div>
               </div>
-              <p className="text-gray-500 dark:text-gray-400">32 voters</p>
+              <p className="text-gray-500 dark:text-gray-400">{getVotesByParty()[1]} voters</p>
             </CardHeader>
           </Card>
           {/* //DA Section */}
@@ -131,22 +173,29 @@ export default function Component() {
                 width="150"
               />
               <div className="h-8 w-48 bg-gray-300 dark:bg-gray-700 mx-auto">
-                <div
-                  className="h-full bg-blue-500 dark:bg-blue-500 flex items-center justify-center"
+              <div
+                  className="h-full bg-yellow-500 dark:bg-yellow-500 flex items-center justify-center"
                   style={{
-                    width: "54%",
+                    width: `${Math.round(
+                      getVotesByParty()[2] / votes.length * 100
+                    )}%`,
                   }}
                 >
-                  54%
+                  {Math.round(
+                    getVotesByParty()[2] / votes.length * 100
+                  )
+                  } %
                 </div>
               </div>
-              <p className="text-gray-500 dark:text-gray-400">27 voters</p>
+              <p className="text-gray-500 dark:text-gray-400">{getVotesByParty()[2]} voters</p>
             </CardHeader>
           </Card>
         </div>
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
           Remember, your vote is your voice. Make it count. Choose your party wisely. Your vote matters.
         </p>
+
+
       </div>
     </div>
   )

@@ -3,12 +3,54 @@
  * @see https://v0.dev/t/BVWzgtJa3Zm
  * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
  */
+"use client";
 import { Button } from "@/components/ui/button"
 import { CardTitle, CardHeader, CardContent, Card } from "@/components/ui/card"
 import Link from 'next/link';
+import {useState, useEffect} from 'react';
+import database from "@/lib/database";
+import { Vote } from "@/models/vote";
+import { Voter } from "@/models/voter";
+import { auth } from "@/lib/firebase";
+import { useRouter } from "next/navigation";
 {/* //THIS IS THE PARTY CODE */}
 
 export default function Component() {
+  const [voter,setVoter] = useState<any>();
+  const [user,setUser] = useState(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUser(user);
+        const userID = user.uid;
+``
+        const promisedVoter: Promise<Voter | undefined> = database.getVoter(userID);
+ 
+        promisedVoter.then((voter) => {
+          if (voter) {
+            setVoter(voter);
+          }
+        });
+      }
+    });
+  }
+  , []);
+
+  const handleVote = async(partyId) => {
+    const newVote: Vote = {
+      vote_id: `v_${Math.floor(100000 + Math.random() * 900000)}`,
+      voter: voter,
+      party_id: partyId
+    }
+
+    console.log(newVote);
+
+    await database.addVote(newVote);
+    router.push("/")
+  }
+
   return (
     <div className="bg-gray-50 dark:bg-gray-900 py-12">
       <div className="container px-4">
@@ -27,7 +69,7 @@ export default function Component() {
             />
           </div>
           <div>
-            <Link href="/app">
+            <Link href="/">
                 <Button className="text-sm bg-black text-white" variant="outline">
                 View Results
                 </Button>
@@ -70,7 +112,9 @@ export default function Component() {
                 Embrace the legacy of liberation with ANC, advocating for unity and transformation. Our commitment to social justice and economic
                 development ensures a better future for all South Africans. Vote ANC for a continued journey towards equality and prosperity
               </p>
-              <Button size="sm">Vote</Button>
+              <Button 
+              onClick = {() => handleVote('0')}
+              size="sm">Vote</Button>
             </CardContent>
           </Card>
           <Card className="flex flex-col items-center justify-center gap-4 p-8 bg-sky-200 dark:bg-sky-900">
@@ -93,7 +137,9 @@ export default function Component() {
                Join EFF in the fight for economic emancipation and social justice. We champion radical policies to address inequality and advocate for the 
                marginalized. Vote EFF for a bold and transformative vision that challenges the status quo.
               </p>
-              <Button size="sm">Vote</Button>
+              <Button 
+              onClick = {() => handleVote('1')}
+              size="sm">Vote</Button>
             </CardContent>
           </Card>
           <Card className="flex flex-col items-center justify-center gap-4 p-8 bg-sky-200 dark:bg-sky-900">
@@ -116,7 +162,9 @@ export default function Component() {
                 Choose the DA for a diverse and inclusive South Africa. We prioritize good governance, accountability, and economic growth. With a 
                 commitment to individual freedoms, we aim to build a nation where opportunities are accessible to all. Vote DA for a united future.
               </p>
-              <Button size="sm">Vote</Button>
+              <Button 
+              onClick = {() => handleVote('2')}
+              size="sm">Vote</Button>
             </CardContent>
           </Card>
         </div>
