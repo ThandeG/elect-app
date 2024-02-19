@@ -118,11 +118,13 @@ export default function Component() {
                         onChange={handlePasswordChange} />
                       {passwordError && (<p className="text-red-500 text-sm">{passwordError}</p>)}
                     </div>
+                    <Link href = "/party">
                     <Button 
                     onClick = {() => handleSubmit}
                     className="w-full" type="submit">
                       Submit
                     </Button>
+                    </Link>
                   </CardContent>
                 </CardHeader>
               </Card>
