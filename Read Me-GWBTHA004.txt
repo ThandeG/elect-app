@@ -14,7 +14,7 @@ Stack:
 - Firebase Firestore
 
 How to Run:
-The developer server needs to be run on bash. The promopt in the command line to run the project is npm run dev.
+Unzip and enter the folder. The developer server needs to be run on bash. The promopt in the command line to install all dependancies for  the project is: npm install. Thereafter the command line to run the project is: npm run dev. Thereafter an http link will be created on the local machine. Right click on that link to open the project in Chrome.
 
 Navigation:
 The landing page is the results page as a guest user can also access that page. There are two buttons on the results page, LogIn and Register. A user can LogIn or Regitster if they are first time users. Thereafter they will land on the Votes page which has the manifestos of each of the political parties. The user/voter will be able to place a vote and will immediately be transfered back to the results page and will not be able to go back to the votes/party page as they will not be able to vote again.  

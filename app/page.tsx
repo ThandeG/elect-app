@@ -194,8 +194,6 @@ export default function Component() {
         <p className="text-center text-gray-500 dark:text-gray-400 mt-8">
           Remember, your vote is your voice. Make it count. Choose your party wisely. Your vote matters.
         </p>
-
-
       </div>
     </div>
   )
